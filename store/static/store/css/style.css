@@ -1,0 +1,9 @@
+.text-center {
+    text-align: center;
+}
+.mb-3 input, .mb-3 textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}

@@ -1,0 +1,37 @@
+<!-- store/templates/store/product_detail.html -->
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <img src="{{ phone.image.url }}" class="img-fluid" alt="{{ phone.model }}">
+    </div>
+    <div class="col-md-6">
+        <h2>{{ phone.brand }} {{ phone.model }}</h2>
+        <p><strong>Storage:</strong> {{ phone.storage }}</p>
+        <p><strong>Color:</strong> {{ phone.color }}</p>
+        <p><strong>Price:</strong> ${{ phone.price }}</p>
+        <a href="{% url 'add_to_cart' phone.id %}" class="btn btn-success">Add to Cart</a>
+    </div>
+</div>
+
+<hr>
+<h4>Reviews</h4>
+{% for review in reviews %}
+    <div class="mb-3">
+        <strong>{{ review.user.username }}</strong> - {{ review.rating }} ★
+        <p>{{ review.comment }}</p>
+    </div>
+{% empty %}
+    <p>No reviews yet.</p>
+{% endfor %}
+
+{% if can_review %}
+    <h5 class="mt-4">Leave a Review</h5>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endif %}
+{% endblock %}
