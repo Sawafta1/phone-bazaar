@@ -1,11 +1,50 @@
 <!-- store/templates/store/auth.html -->
 {% extends 'store/base.html' %}
+{% load static %}
 
 {% block content %}
-<h2>Login</h2>
-<form method="post">
+<div class="container" style="max-width: 500px;">
+  <h2 class="mb-4">🔐 Login</h2>
+
+  <div id="login-message"></div>
+
+  <form id="loginForm" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+  </form>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const form = this;
+  const formData = new FormData(form);
+  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  fetch("{% url 'login' %}", {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrfToken
+    },
+    body: formData
+  })
+  .then(response => response.text())
+  .then(html => {
+    // If login was successful, the page likely redirects (contains "Logout" or username)
+    if (html.includes('Logout') || html.includes('Hi,')) {
+      window.location.href = '/';  // or wherever you want to go
+    } else {
+      document.getElementById('login-message').innerHTML =
+        '<div class="alert alert-danger">❌ Invalid username or password.</div>';
+    }
+  })
+  .catch(error => {
+    document.getElementById('login-message').innerHTML =
+      '<div class="alert alert-danger">⚠️ Something went wrong. Try again later.</div>';
+    console.error('Login error:', error);
+  });
+});
+</script>
 {% endblock %}

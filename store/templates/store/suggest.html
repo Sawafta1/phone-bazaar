@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Suggest Me a Phone</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .suggest-form {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 50px auto;
+    }
+    .card img {
+      max-height: 200px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <div class="suggest-form">
+    <h2 class="text-center mb-4">📱 Suggest Me a Phone</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Maximum Price ($)</label>
+          <input type="number" name="max_price" class="form-control" value="{{ request.POST.max_price }}" required>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Storage</label>
+          <select name="storage" class="form-select" required>
+            <option value="64" {% if request.POST.storage == "64" %}selected{% endif %}>64 GB</option>
+            <option value="128" {% if request.POST.storage == "128" %}selected{% endif %}>128 GB</option>
+            <option value="256" {% if request.POST.storage == "256" %}selected{% endif %}>256 GB</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Color</label>
+          <input type="text" name="color" class="form-control" value="{{ request.POST.color }}">
+        </div>
+
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-primary mt-3">🔍 Suggest</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {% if suggestions %}
+    <div class="container mt-5">
+      <h3 class="mb-4 text-center">Top Matching Phones</h3>
+      <div class="row justify-content-center g-4">
+        {% for phone in suggestions %}
+          <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ phone.image.url }}" class="card-img-top" alt="{{ phone.model }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ phone.brand }} {{ phone.model }}</h5>
+                <p class="card-text">
+                  💵 <strong>${{ phone.price }}</strong><br>
+                  📦 {{ phone.storage }} GB<br>
+                  🎨 {{ phone.color }}
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% elif request.method == 'POST' %}
+    <div class="container text-center mt-4">
+      <div class="alert alert-warning">
+        🚫 No phones matched your search. Try different values.
+      </div>
+    </div>
+  {% endif %}
+  <div class="text-center mt-4">
+    <a href="{% url 'home' %}" class="btn btn-secondary">⬅️ Back to Home</a>
+  </div>
+</body>
+</html>

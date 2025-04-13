@@ -1,5 +1,5 @@
-# store/views.py
-
+from django.shortcuts import render
+from store.models import Phone
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Phone, Review, Order, OrderItem, UserProfile
@@ -8,6 +8,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
 from django.views.decorators.http import require_POST
+from django.contrib import messages
+from .forms import ContactForm
 from django.contrib.auth.decorators import login_required
 
 def home(request):
@@ -111,3 +113,32 @@ def remove_from_cart(request):
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'store/orders.html', {'orders': orders})
+def suggest_phone_view(request):
+    suggestions = []
+
+    if request.method == 'POST':
+        max_price = request.POST.get('max_price')
+        storage = request.POST.get('storage')
+        color = request.POST.get('color')
+
+        # Fallback to case-insensitive search
+        phones = Phone.objects.filter(
+            storage__icontains=storage,
+            color__icontains=color,
+            price__lte=max_price
+        ).order_by('price')[:3]
+
+        suggestions = list(phones)
+
+    return render(request, 'store/suggest.html', {'suggestions': suggestions})
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Optionally, save or send email here
+            messages.success(request, "Thanks for contacting us! We'll respond soon.")
+            form = ContactForm()  # reset form
+    else:
+        form = ContactForm()
+    
+    return render(request, 'store/contact.html', {'form': form})

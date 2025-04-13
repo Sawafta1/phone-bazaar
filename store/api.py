@@ -1,30 +1,26 @@
-# store/api.py
-
-from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .models import Phone
+from .serializers import PhoneSerializer
 
-def phone_list_api(request):
-    brand = request.GET.get('brand')
-    storage = request.GET.get('storage')
+@api_view(['GET'])
+def phone_compare_api(request):
+    p1 = request.GET.get('p1')
+    p2 = request.GET.get('p2')
 
-    phones = Phone.objects.all()
+    if not p1 or not p2:
+        return Response({'error': 'Please provide two product IDs as p1 and p2'}, status=400)
 
-    if brand:
-        phones = phones.filter(brand=brand)
-    if storage:
-        phones = phones.filter(storage=storage)
+    phone1 = Phone.objects.filter(pk=p1).first()
+    phone2 = Phone.objects.filter(pk=p2).first()
 
-    data = []
-    for phone in phones:
-        data.append({
-            'id': phone.id,
-            'brand': phone.brand,
-            'model': phone.model,
-            'storage': phone.storage,
-            'color': phone.color,
-            'price': float(phone.price),
-            'stock': phone.stock,
-            'image': phone.image.url if phone.image else ''
-        })
+    if not phone1 or not phone2:
+        return Response({'error': 'One or both phones not found.'}, status=404)
 
-    return JsonResponse({'phones': data})
+    serializer1 = PhoneSerializer(phone1)
+    serializer2 = PhoneSerializer(phone2)
+
+    return Response({
+        'product_1': serializer1.data,
+        'product_2': serializer2.data
+    })

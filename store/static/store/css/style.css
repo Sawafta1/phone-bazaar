@@ -7,3 +7,87 @@
     border-radius: 6px;
     border: 1px solid #ccc;
 }
+/* style.css */
+
+/* 1. Global Styles */
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* 2. Navbar */
+  .navbar {
+    background-color: #121212;
+  }
+  
+  .navbar-brand, .nav-link {
+    color: #ffffff !important;
+  }
+  
+  .navbar-brand:hover, .nav-link:hover {
+    color: #e50914 !important;
+  }
+  
+  /* 3. Buttons */
+  .btn-primary {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: #ffffff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #b81d24;
+    border-color: #b81d24;
+  }
+  
+  /* 4. Links */
+  a {
+    color: #e50914;
+  }
+  
+  a:hover {
+    color: #b81d24;
+  }
+  
+  /* 5. Footer */
+  footer {
+    background-color: #121212;
+    color: #ffffff;
+  }
+/* style.css */
+
+/* PHONE CARD STYLING */
+.phone-card {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+  
+  .phone-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+  }
+  
+  .phone-card .card-title {
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  .phone-card .card-text {
+    color: #cccccc;
+    font-size: 0.95rem;
+  }
+  
+  .phone-card .card-price {
+    color: #e50914;
+    font-size: 1.1rem;
+  }
+  
+  .phone-card .btn {
+    margin-top: 10px;
+  }
+  

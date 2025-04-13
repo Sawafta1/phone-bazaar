@@ -23,6 +23,8 @@ class Phone(models.Model):
     color = models.CharField(max_length=30)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField()
+    description = models.TextField(blank=True, null=True)  # ✅ add this line
+
     image = models.ImageField(upload_to='phones/')
 
     def __str__(self):

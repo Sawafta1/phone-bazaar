@@ -1,46 +1,94 @@
-<!-- store/templates/store/base.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Phone Bazaar</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta charset="UTF-8">
+  <title>Phone Bazaar</title>
+  <meta name="csrf-token" content="{{ csrf_token }}">
 
-    {% load static %}
+  <!-- Bootstrap CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  >
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-          <a class="navbar-brand" href="{% url 'home' %}">Phone Bazaar</a>
-      
-          <div class="ms-auto d-flex align-items-center">
-            {% if user.is_authenticated %}
-              <span class="text-white me-3">Hi, {{ user.username }}!</span>
-      
-              <a href="{% url 'cart' %}" class="btn btn-outline-light me-2">Cart</a>      
-              {% if user.is_staff %}
-                <a href="/admin/" class="btn btn-warning me-2">Admin Dashboard</a>
-              {% endif %}
-      
-              <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                {% csrf_token %}
-                <button class="btn btn-danger" type="submit">Logout</button>
-            </form>            {% else %}
-              <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
-              <a href="{% url 'signup' %}" class="btn btn-success">Sign Up</a>
-            {% endif %}
-          </div>
-        </div>
-      </nav>
-      
+<body class="d-flex flex-column min-vh-100">
 
-<div class="container">
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg" style="background-color: #121212;">
+    <div class="container">
+      <a class="navbar-brand text-white fw-bold" href="{% url 'home' %}">Phone Bazaar</a>
+      <button
+        class="navbar-toggler text-white"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          {% if user.is_authenticated %}
+            <li class="nav-item me-3">
+              <span class="nav-link text-white">Hi, {{ user.username }}!</span>
+            </li>
+            <li class="nav-item me-2">
+              <a href="{% url 'cart' %}" class="btn btn-accent">Cart</a>
+            </li>
+            {% if user.is_staff %}
+              <li class="nav-item me-2">
+                <a href="/admin/" class="btn btn-warning">Admin</a>
+              </li>
+            {% endif %}
+            <li class="nav-item me-2">
+              <a href="{% url 'suggest_phone' %}" class="btn btn-accent">Suggest Phone</a>
+            </li>
+            <li class="nav-item me-2">
+              <a href="{% url 'contact' %}" class="btn btn-outline-accent">Contact</a>
+            </li>
+            <li class="nav-item">
+              <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+              </form>
+            </li>
+          {% else %}
+            <li class="nav-item me-2">
+              <a href="{% url 'login' %}" class="btn btn-outline-accent">Login</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'signup' %}" class="btn btn-accent">Sign Up</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- END NAVBAR -->
+
+  <!-- MAIN CONTENT -->
+  <main class="container py-5" style="color: #ffffff;">
     {% block content %}
     {% endblock %}
-</div>
-<script src="{% static 'store/js/script.js' %}"></script>
+  </main>
 
+  <!-- FOOTER -->
+  <footer class="py-4 mt-auto text-center text-white" style="background-color: #121212;">
+    <div class="container">
+      <p class="mb-0">© {{ current_year|default:2025 }} Phone Bazaar. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS (optional) -->
+  <script src="{% static 'store/js/script.js' %}"></script>
 </body>
 </html>

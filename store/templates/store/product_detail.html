@@ -1,37 +1,38 @@
-<!-- store/templates/store/product_detail.html -->
 {% extends 'store/base.html' %}
-
 {% block content %}
-<div class="row">
+<div class="container">
+  <div class="row">
     <div class="col-md-6">
-        <img src="{{ phone.image.url }}" class="img-fluid" alt="{{ phone.model }}">
+      <img src="{{ phone.image.url }}" class="img-fluid rounded" alt="{{ phone.model }}">
     </div>
     <div class="col-md-6">
-        <h2>{{ phone.brand }} {{ phone.model }}</h2>
-        <p><strong>Storage:</strong> {{ phone.storage }}</p>
-        <p><strong>Color:</strong> {{ phone.color }}</p>
-        <p><strong>Price:</strong> ${{ phone.price }}</p>
-        <a href="{% url 'add_to_cart' phone.id %}" class="btn btn-success">Add to Cart</a>
+      <h2>{{ phone.brand }} {{ phone.model }}</h2>
+      <h4 class="text-success">${{ phone.price }}</h4>
+
+      <div class="product-description mt-4">
+        <h5>Description:</h5>
+        <p>{{ phone.description }}</p>
+      </div>
+
+      <ul class="list-group mt-4">
+        <li class="list-group-item">📦 Storage: {{ phone.storage }} GB</li>
+        <li class="list-group-item">🎨 Color: {{ phone.color }}</li>
+      </ul>
+
+      <a href="{% url 'add_to_cart' phone.pk %}" class="btn btn-primary mt-3">Add to Cart 🛒</a>
     </div>
+  </div>
+
+  <!-- Reviews Section (optional) -->
+  <hr class="mt-4">
+  <h4>📣 Reviews:</h4>
+  {% for review in reviews %}
+    <div class="border rounded bg-light p-3 mb-2">
+      <strong>{{ review.user.username }}</strong> on {{ review.created_at|date:"M d, Y" }}
+      <p>{{ review.content }}</p>
+    </div>
+  {% empty %}
+    <p>No reviews yet. Be the first!</p>
+  {% endfor %}
 </div>
-
-<hr>
-<h4>Reviews</h4>
-{% for review in reviews %}
-    <div class="mb-3">
-        <strong>{{ review.user.username }}</strong> - {{ review.rating }} ★
-        <p>{{ review.comment }}</p>
-    </div>
-{% empty %}
-    <p>No reviews yet.</p>
-{% endfor %}
-
-{% if can_review %}
-    <h5 class="mt-4">Leave a Review</h5>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-{% endif %}
 {% endblock %}
