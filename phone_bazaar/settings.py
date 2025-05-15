@@ -84,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'phone_bazaar_db',     # your DB name
         'USER': 'root',                # your MySQL username
-        'PASSWORD': 'mohammad',    # your MySQL password
+        'PASSWORD': '',    # your MySQL password
         'HOST': 'localhost',           # or 127.0.0.1
         'PORT': '3306', 
     }
